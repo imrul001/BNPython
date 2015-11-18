@@ -6,6 +6,7 @@ __date__ = "$Oct 20, 2015 11:37:03 PM$"
 import csv
 import random
 import sys
+import dataPreparation.random_sampling
 
 # This method replaces the probabilities by a randomely choose value(incidence rates)
 def getRandomlyChosenValue(eachEntry):
@@ -50,9 +51,9 @@ def getTheMidPoint(state):
     ranges_w2 = list();
     ranges_w3 = list();
 
-    ranges_w1 = [0.0,0.5,1.5,2.5,5.5,82];
-    ranges_w2 = [0.0,0.5,1.5,2.5,5.5,82];
-    ranges_w3 = [0.0,0.5,1.5,2.5,5.5,82];
+    ranges_w1 = [0.0, 0.5, 1.5, 2.5, 5.5, 82];
+    ranges_w2 = [0.0, 0.5, 1.5, 2.5, 5.5, 82];
+    ranges_w3 = [0.0, 0.5, 1.5, 2.5, 5.5, 82];
 
     ranges = ranges_w3;
 
@@ -61,19 +62,23 @@ def getTheMidPoint(state):
     if(state == 0):
         midPoint = calculateMidpoint(ranges[0], ranges[1]);
         randomExact = generateUniformRandom(ranges[0], ranges[1]);
-#        midPoint = 0.0;
+        midPoint = 0.0;
     if(state == 1):
         midPoint = calculateMidpoint(ranges[1], ranges[2]);
         randomExact = generateUniformRandom(ranges[1], ranges[2]);
+        midPoint = 1.0;
     if(state == 2):
         midPoint = calculateMidpoint(ranges[2], ranges[3]);
         randomExact = generateUniformRandom(ranges[2], ranges[3]);
+        midPoint = 2.0;
     if(state == 3):
         midPoint = calculateMidpoint(ranges[3], ranges[4]);
         randomExact = generateUniformRandom(ranges[3], ranges[4]);
+        midPoint = 4.0;
     if(state == 4):
         midPoint = calculateMidpoint(ranges[4], ranges[5]);
         randomExact = generateUniformRandom(ranges[4], ranges[5]);
+        midPoint = dataPreparation.random_sampling.generateRandomPointbyDistribution();
     return midPoint;	
 
 
@@ -89,8 +94,6 @@ def generateUniformRandom(lowerbound, uppderBound):
 # This is the input csv(, delimited)file by command line.
 dataFile = sys.argv[1];
 
-#0.0,0.5,1.5,2.5,5.5,82
-
 # Main Body of the Program
 numberOfSamples = 100;
 with open(dataFile, 'rb') as csvfile:
@@ -102,7 +105,7 @@ with open(dataFile, 'rb') as csvfile:
     	if(i == 0):
             sys.stdout.write(row[0] + "," + row[1] + "," + row[2] + "," + row[3] + "," + row[4] + "," + row[5] + "\n");
     	if(i != 0):
-            if(float(row[5])== 0.0):
+            if(float(row[5]) == 0.0):
                 randomN = 100;
             if(float(row[5]) > 0.5 and float(row[5]) <= 1.5):
                 randomN = 100;
@@ -113,33 +116,8 @@ with open(dataFile, 'rb') as csvfile:
             if(float(row[5]) > 5.5):
                 randomN = 100;
             j = 0;
-            for j in range(0,randomN):
+            for j in range(0, randomN):
                 sys.stdout.write(getRandomlyChosenValue(row[0]) + "," + getRandomlyChosenValue(row[1]) + ","
                                  + getRandomlyChosenValue(row[2]) + "," + getRandomlyChosenValue(row[3]) + ","
                                  + getRandomlyChosenValue(row[4]) + "," + row[5] + "\n");	
-    	i = i + 1;
-  		
-
-#best1
-#470
-#230
-#250
-#180
-#150
-
-#best2
-#500
-#230
-#250
-#180
-#150
-
-#Seminar Presentation - 2
-#280
-#105
-#105
-#105
-#105
-
-
-    		
+    	i = i + 1;    		

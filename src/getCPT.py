@@ -5,6 +5,7 @@ __date__ = "$Oct 20, 2015 11:43:32 PM$"
 import csv
 import math
 import sys
+import dataPreparation.random_sampling
 
 # =EXP($J$8+(A2*$J$9)+(B2*$J$10)+(C2*$J$11)+(D2$J$12)+(E5*$J$13))
 
@@ -14,32 +15,7 @@ def getFuntionValueForPoisson(SLOPE_RAINFALL, DIST_TO_BORDER, NDVI, DIST_TO_STRE
     eff_3 = list();
     eff = list();
     
-#    poisson==eff_1 = [-0.2524, 0.01549, 0.005536, 0.01435, 0.01706, 0.01890];
-#    zip_mid_0 ===eff_1 = [1.7498401, -0.4492147, -0.0158125, -0.0402851, -0.0351649, -0.0374318]
-#    zip_mid === eff_1 = [2.2208451, -0.3733766, -0.0146031, -0.3115813, -0.024388, -0.3103967]
-#   zip_random
-#    eff_1 = [1.7727745, -0.0320003, -0.0129864, -0.3899677, -0.0326399, -0.0341625]
-#   Linear Regression
-#    eff_1 = [0.1737925, 0.0894477, 0.0160657, 0.0850058, 0.0978522, 0.1099574];
-#mid point with poisson
-
-#    eff_1 = [-2.671e-01, 1.524e-02, 5.545e-03, 1.479e-02, 1.713e-02, 1.881e-02];
-
-#R-sq=0.3002
-#    eff_1= [-0.0052270,0.0543379,0.0249545,0.0583767,0.0674259,0.0597816];
-#R-sq=0.306
-#   eff_1= [-0.4192962, 0.0527414, 0.0239367, 0.0591356, 0.0638277, 0.0600086];
-# 30.2
-#    eff_1= [-0.4167871, 0.0485557, 0.0225062, 0.0600918, 0.0650431,0.0589140];
-#29.
-#    eff_1= [0.2203034, 0.0520898, 0.0251213, 0.0582767, 0.0703513,0.0603191];
-#best==    eff_1= [-0.0178389, 0.0503834, 0.0260136, 0.0579199, 0.0695520,0.0618606];
-#best1== eff_1= [-0.0030582, 0.0456810, 0.0217269, 0.0553920, 0.0622497,0.0566454];
-#best2===  eff_1= [-0.0314248, 0.0470156,0.0206798,0.0545907,0.0628409,0.0551295];
-#new-b    eff_1= [0.0142586,0.0393981,0.0272951,0.0658727,0.0725503,0.0575656];
-#eff_1= [-0.0505472,0.0376472,0.0251785,0.0588029,0.0694982,0.0554280];
-
-    eff_1 = [-0.8582113, 0.0297849,0.0180236,0.0341691,0.0345780,0.0347838];
+    eff_1 = [-1.0322622, 0.0960439,0.0441000,0.1037926,0.1056194,0.1093415];
     eff_2 = [-2.860191, 0.235727, 0.098182, 0.217419, 0.255139, 0.252388];
     eff_3 = [-2.846142, 0.237893, 0.098829, 0.222521, 0.258851, 0.247076];
     if(week == "1"):
@@ -75,14 +51,19 @@ def getMidPoint(state, week):
 
     if(state == "s0"):
         midPoint = calculateMidpoint(ranges[0], ranges[1]);
+        midPoint = 0;
     if(state == "s1"):
         midPoint = calculateMidpoint(ranges[1], ranges[2]);
+        midPoint = 1;
     if(state == "s2"):
         midPoint = calculateMidpoint(ranges[2], ranges[3]);
+        midPoint = 2;
     if(state == "s3"):
         midPoint = calculateMidpoint(ranges[3], ranges[4]);
+        midPoint = 4;
     if(state == "s4"):
         midPoint = calculateMidpoint(ranges[4], ranges[5]);
+        midPoint = dataPreparation.random_sampling.generateRandomPointbyDistribution();
     return str(midPoint);
 
 # This method calculates the mid point between two points
@@ -131,16 +112,6 @@ def getProbabilities(eachCombinition, week):
     result = getFuntionValueForPoisson(SLOPE_RAINFALL, DIST_TO_BORDER, NDVI, DIST_TO_STREAM, STREAM_DENSITY, week);
     return str(result);
 
-# def printEachEntry(resultProbability,week):
-# 	state = getState(resultProbability,week);
-# 	if(state == "s0"):
-# 		return "1, 0, 0"
-# 	if(state == "s1"):
-# 		return "0, 1, 0"
-# 	if(state == "s2"):
-# 		return "0, 0, 1"
-# 	# if(state == "s3"):
-# 	# 	return "0, 0, 0, 1"
 
 def printEachEntry(resultProbability, week):
     state = getState(resultProbability, week);

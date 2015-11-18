@@ -1,12 +1,19 @@
 #! /usr/bin/python
 
-# To change this license header, choose License Headers in Project Properties.
-# To change this template file, choose Tools | Templates
-# and open the template in the editor.
-
 __author__ = "imrul"
 __date__ = "$Oct 29, 2015 4:39:34 PM$"
 
+import csv
 import sys
 
-sys.stdout.write("imrul\n");
+fileName = sys.argv[1];
+with open(fileName, 'rb') as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    count = 0;
+    for row in reader:
+        if(count != 0):
+            if(float(row[18]) > 5.5 and float(row[18]) < 82.1):
+                sys.stdout.write(row[18] + "\n");
+        count = count + 1;
+
+
