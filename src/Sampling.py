@@ -51,35 +51,53 @@ def getTheMidPoint(state):
     ranges_w2 = list();
     ranges_w3 = list();
 
-    ranges_w1 = [0.0, 0.5, 1.5, 2.5, 5.5, 82];
-    ranges_w2 = [0.0, 0.5, 1.5, 2.5, 5.5, 82];
-    ranges_w3 = [0.0, 0.5, 1.5, 2.5, 5.5, 82];
+    s2BinList = list()
+    s2BinList = [2,3,4];
+    s2FreqList = list();
+    s2FreqList = [129, 92, 76];
 
-    ranges = ranges_w3;
+    s3BinList = list();
+    s3BinList = [5.5, 6.5, 8.5, 10.5, 13];
+    s3FreqList = list();
+    s3FreqList =[48, 41, 66, 51, 47];
+    
+    s4BinList = list();
+    s4BinList = [16.5, 21.5, 26.5, 36.5, 56.5, 82];
+    s4FreqList = list();
+    s4FreqList =[42, 47, 42, 42, 41, 41];
 
+    ranges_w1 = [0.0, 0.98, 1.5, 4.5, 13.5, 297];
+    ranges_w2 = [0.0, 0.5, 1.5, 4.5, 13.5, 297];
+    ranges_w3 = [0.0, 0.5, 1.5, 4.5, 13.5, 297];
+
+    ranges = ranges_w1;
     midPoint = 0.0;
+    
     randomExact = 0.0;
     if(state == 0):
         midPoint = calculateMidpoint(ranges[0], ranges[1]);
-        randomExact = generateUniformRandom(ranges[0], ranges[1]);
+#        randomExact = generateUniformRandom(ranges[0], ranges[1]);
         midPoint = 0.0;
     if(state == 1):
         midPoint = calculateMidpoint(ranges[1], ranges[2]);
-        randomExact = generateUniformRandom(ranges[1], ranges[2]);
+#        randomExact = generateUniformRandom(ranges[1], ranges[2]);
         midPoint = 1.0;
     if(state == 2):
         midPoint = calculateMidpoint(ranges[2], ranges[3]);
-        randomExact = generateUniformRandom(ranges[2], ranges[3]);
-        midPoint = 2.0;
+#        randomExact = generateUniformRandom(ranges[2], ranges[3]);
+#        midPoint = dataPreparation.random_sampling.generateRandomPointbyDistribution(s2BinList, s2FreqList, 1.5);
+        midPoint = 2.821549;
     if(state == 3):
         midPoint = calculateMidpoint(ranges[3], ranges[4]);
-        randomExact = generateUniformRandom(ranges[3], ranges[4]);
-        midPoint = 4.0;
+#        randomExact = generateUniformRandom(ranges[3], ranges[4]);
+#        midPoint = dataPreparation.random_sampling.generateRandomPointbyDistribution(s3BinList, s3FreqList, 4.5);
+        midPoint = 8.007;
     if(state == 4):
         midPoint = calculateMidpoint(ranges[4], ranges[5]);
-        randomExact = generateUniformRandom(ranges[4], ranges[5]);
-        midPoint = dataPreparation.random_sampling.generateRandomPointbyDistribution();
-    return midPoint;	
+#        randomExact = generateUniformRandom(ranges[4], ranges[5]);
+#        midPoint = dataPreparation.random_sampling.generateRandomPointbyDistribution(s4BinList, s4FreqList, 13.5);
+        midPoint = 38.42745;
+    return midPoint;    
 
 
 # This method calculates the mid point between two points
@@ -96,28 +114,30 @@ dataFile = sys.argv[1];
 
 # Main Body of the Program
 numberOfSamples = 100;
+id = 1;
 with open(dataFile, 'rb') as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
     i = 0;
     numberOfSamples = 0;
     for row in reader:
         randomN = 0;
-    	if(i == 0):
-            sys.stdout.write(row[0] + "," + row[1] + "," + row[2] + "," + row[3] + "," + row[4] + "," + row[5] + "\n");
-    	if(i != 0):
+        if(i == 0):
+            sys.stdout.write(row[0] + "," + row[1] + "," + row[2] + "," + row[3] + "," + row[4] + "," + row[5] + ","+"month,"+"id"+"\n");
+        if(i != 0):
             if(float(row[5]) == 0.0):
                 randomN = 100;
             if(float(row[5]) > 0.5 and float(row[5]) <= 1.5):
                 randomN = 100;
-            if(float(row[5]) > 1.5 and float(row[5]) <= 2.5):
+            if(float(row[5]) > 1.5 and float(row[5]) <= 4.5):
                 randomN = 100;
-            if(float(row[5]) > 2.5 and float(row[5]) <= 5.5):
+            if(float(row[5]) > 4.5 and float(row[5]) <= 13.5):
                 randomN = 100;
-            if(float(row[5]) > 5.5):
+            if(float(row[5]) > 13.5):
                 randomN = 100;
             j = 0;
             for j in range(0, randomN):
                 sys.stdout.write(getRandomlyChosenValue(row[0]) + "," + getRandomlyChosenValue(row[1]) + ","
                                  + getRandomlyChosenValue(row[2]) + "," + getRandomlyChosenValue(row[3]) + ","
-                                 + getRandomlyChosenValue(row[4]) + "," + row[5] + "\n");	
-    	i = i + 1;    		
+                                 + getRandomlyChosenValue(row[4]) + "," + row[5] + "," +row[7]+ "," +str(id)+ "\n");
+                id = id +1;                 
+        i = i + 1;    
