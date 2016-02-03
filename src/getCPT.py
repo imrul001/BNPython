@@ -44,29 +44,26 @@ def getStateFromRange(value, ranges):
                 break;
     return state;
 
-def getFuntionValueForPoisson(SLOPE_RAINFALL, DIST_TO_BORDER, NDVI, DIST_TO_STREAM, STREAM_DENSITY, week):
+def getFuntionValueForPoisson(SLOPE_RAINFALL, DIST_TO_BORDER, NDVI, DIST_TO_STREAM, STREAM_DENSITY, nearest_sum, week):
     eff_1 = list();
     eff_2 = list();
     eff_3 = list();
     eff = list();
-    # eff_1 = [-1.0203705, 0.0946385,0.0428739,0.1045004,0.1070916,0.1109867];
-#        eff_1 = [-0.1399236, 0.0322075, 0.0265299, 0.0367834, 0.0346012, 0.0411077];
-#linear regression
-#    eff_1 = [-1.866789, 0.235169, 0.130714, 0.280894, 0.320118, 0.326537];
-#hurdle model
-#eff_1 = [-0.1384127, 0.0323813, 0.0272423, 0.0376519, 0.0324724, 0.0410776];
+#    Hurdle model    
 #    eff_1 = [-0.1447601, 0.0325562, 0.0273678, 0.0371324, 0.0343353, 0.0411477];
 
-    eff_1 = [-0.1447601, 0.0325562, 0.0273678, 0.0371324, 0.0343353, 0.0411477];
+    eff_1 = [0.3267298, 0.0263652, 0.0365595, 0.0047537, 0.0038788, 0.0051445];
     eff_2 = [-2.860191, 0.235727, 0.098182, 0.217419, -0.0341719, 0.252388];
     eff_3 = [-2.846142, 0.237893, 0.098829, 0.222521, 0.258851, 0.247076];
+    
+    eff_1 = [0.1730879, 0.0221619, 0.0319645, 0.0041213, 0.0031739, 0.0038853, 0.0484235];
     if(week == "1"):
         eff = eff_1;
     if(week == "2"):
         eff = eff_2;
     if(week == "3"):
         eff = eff_3;    
-    result = eff[0] + (SLOPE_RAINFALL * eff[1]) + (DIST_TO_BORDER * eff[2]) + (NDVI * eff[3]) + (DIST_TO_STREAM * eff[4]) + (STREAM_DENSITY * eff[5]);
+    result = eff[0] + (SLOPE_RAINFALL * eff[1]) + (DIST_TO_BORDER * eff[2]) + (NDVI * eff[3]) + (DIST_TO_STREAM * eff[4]) + (STREAM_DENSITY * eff[5]) +(nearest_sum * eff[6]);
     # sys.stdout.write(str(math.exp(result))+",");
     return math.exp(result);
 #    sys.stdout.write(str(result)+",");
@@ -81,9 +78,9 @@ def getMidPoint(state, week):
 
     # 0.0057,0.073,0.19534225,0.3918015,3.634336
 
-    ranges_w1 = [0.0, 0.98, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 9.5, 11.5, 13.5, 15.5, 18.5, 25.5, 30.5, 297];
-    ranges_w2 = [0.0, 0.5, 1.5, 2.5, 5.5, 6.5, 8.5, 11.5, 16.5, 19.5, 25.5, 34, 82];
-    ranges_w3 = [0.0, 0.5, 1.5, 2.5, 5.5, 6.5, 8.5, 11.5, 16.5, 19.5, 25.5, 34, 82];
+#    ranges_w1 = [0.0, 0.98, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 9.5, 11.5, 13.5, 15.5, 18.5, 25.5, 30.5, 297];
+#    ranges_w2 = [0.0, 0.5, 1.5, 2.5, 5.5, 6.5, 8.5, 11.5, 16.5, 19.5, 25.5, 34, 82];
+#    ranges_w3 = [0.0, 0.5, 1.5, 2.5, 5.5, 6.5, 8.5, 11.5, 16.5, 19.5, 25.5, 34, 82];
 
 
     if(week == "1"):
@@ -121,9 +118,7 @@ def getState(value, week):
     ranges_w1 = list();
     ranges_w2 = list();
     ranges_w3 = list();
-    ranges_w1 = [0.0, 0.98, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 11.5, 13.5, 15.5, 18.5, 25.5, 30.5, 297];
-#    ranges_w1 = [0, 0.98, 1.5 ,2.5 ,3.4, 4.5, 5.5, 7.5, 9.5, 13.5, 18.5, 25.5, 42.4, 297.1];
-#    ranges_w1 = [0.0, 0.98, 1.5, 4.5, 13.5, 297]
+    ranges_w1 = [0.0, 0.98, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 11.5, 13.5, 15.5, 18.5, 25.5, 30.5, 297.1];
     ranges_w2 = [0.0, 0.5, 1.5, 2.5, 5.5, 6.5, 8.5, 11.5, 16.5, 19.5, 25.5, 34, 82];
     ranges_w3 = [0.0, 0.5, 1.5, 2.5, 5.5, 6.5, 8.5, 11.5, 16.5, 19.5, 25.5, 34, 82];
 
@@ -148,7 +143,8 @@ def getProbabilities(eachCombinition, week):
     NDVI = float(getMidPoint(states[2], week));
     DIST_TO_STREAM = float(getMidPoint(states[3], week));
     STREAM_DENSITY = float(getMidPoint(states[4], week));
-    result = getFuntionValueForPoisson(SLOPE_RAINFALL, DIST_TO_BORDER, NDVI, DIST_TO_STREAM, STREAM_DENSITY, week);
+    nearest_sum = float(getMidPoint(states[5], week));
+    result = getFuntionValueForPoisson(SLOPE_RAINFALL, DIST_TO_BORDER, NDVI, DIST_TO_STREAM, STREAM_DENSITY, nearest_sum, week);
     return str(result);
 
 
